@@ -18,3 +18,8 @@
   --color-primary: #00BE7A;
   --font-inter: 'Inter', sans-serif;
 }
+
+input:focus {
+  background-color: #F1F1F1;
+  outline: none; /* nếu muốn */
+}
