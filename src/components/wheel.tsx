@@ -1,12 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LoginModal from "./login";
 
 export default function App() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [result, setResult] = useState<string>("");
+  const [radius, setRadius] = useState(210);
+
+  useEffect(() => {
+    const updateRadius = () => {
+      if (window.innerWidth < 360) {
+        setRadius(130); // điện thoại nhỏ 320px
+      } else if (window.innerWidth < 640) {
+        setRadius(163.5); // sm
+      } else {
+        setRadius(210); // desktop
+      }
+    };
+
+    updateRadius();
+    window.addEventListener("resize", updateRadius);
+    return () => window.removeEventListener("resize", updateRadius);
+  }, []);
 
   const segments = [
     { text: "$5", color: "#ECE19A" },
@@ -44,8 +61,6 @@ export default function App() {
     }, 4000); // thời gian trùng với animation
   };
 
-  const radius =
-    typeof window !== "undefined" && window.innerWidth < 640 ? 163.5 : 210;
 
   // Hàm tạo path cho từng segment
   const createSegmentPath = (index: number, total: number) => {
@@ -64,7 +79,7 @@ export default function App() {
       <h1 className="text-2xl sm:text-3xl mb-2.5 text-primary text-[2rem] font-extrabold">
         SPIN & EARN
       </h1>
-      <p className="mb-9 font-medium text-sm">
+      <p className="mb-9 font-medium text-sm text-center">
         Turn every spin into crypto rewards on blockchain
       </p>
 
@@ -205,7 +220,7 @@ export default function App() {
       <button
         onClick={spinWheel}
         disabled={isSpinning}
-        className="mt-8 px-20 py-3.5 bg-primary text-white text-base font-bold disabled:opacity-50 disabled:cursor-not-allowed border-transparent rounded-lg border-none"
+        className="mt-8 px-20 py-3.5 bg-primary text-white text-sm sm:text-base font-bold disabled:opacity-50 disabled:cursor-not-allowed border-transparent rounded-lg border-none"
       >
         {isSpinning ? "Spinning..." : "SPIN"}
       </button>

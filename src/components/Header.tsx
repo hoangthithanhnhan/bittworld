@@ -3,9 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useLang } from "lang/useLang";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "@heroui/react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLang();
 
   return (
     <header className="w-full bg-[#0C0C0C] text-white flex items-center justify-between px-5 py-2.5 fixed">
@@ -40,18 +49,24 @@ export default function Header() {
 
       {/* Actions */}
       <div className="flex items-center gap-4 justify-center">
-        <button className="hidden sm:flex bg-transparent border-0 justify-center">
-          <Image
-            src="/setting.png"
-            alt="Settings"
-            width={22}
-            height={22}
-            className="border-none"
-          />
-        </button>
-        <button
-          className="bg-primary text-white border-none px-2 py-1 rounded-lg text-sm font-medium"
-        >
+        <Dropdown>
+          <DropdownTrigger>
+            <button className="hidden sm:flex bg-transparent border-0 justify-center">
+              <Image
+                src="/setting.png"
+                alt="Settings"
+                width={22}
+                height={22}
+                className="border-none"
+              />
+            </button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Static Actions" className="bg-black">
+            <DropdownItem key="lang" className="text-white flex items-center"><Image src="/korea.png" alt="한국어" width={18} height={18} className="inline-block mr-2 object-cover" />한국어</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+
+        <button className="bg-primary text-white border-none px-2 py-1 rounded-lg text-sm font-medium">
           Connect
         </button>
         <button
@@ -70,9 +85,7 @@ export default function Header() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <nav
-          className="absolute left-0 right-0 top-full mt-0 w-full bg-white text-gray-800 shadow-lg px-4 sm:hidden z-50 "
-        >
+        <nav className="absolute left-0 right-0 top-full mt-0 w-full bg-white text-gray-800 shadow-lg px-4 sm:hidden">
           <Link
             href="#"
             className="py-[0.875rem] text-xs text-black hover:bg-gray-100 flex items-center"
@@ -82,7 +95,7 @@ export default function Header() {
               alt="Guide"
               width={14}
               height={14}
-              className="inline-block mr-2" 
+              className="inline-block mr-2"
             />
             Guide
           </Link>
@@ -121,7 +134,8 @@ export default function Header() {
               alt="English"
               width={18}
               height={18}
-              className="inline-block mr-2"/>
+              className="inline-block mr-2"
+            />
             <span className="mr-2">English</span>
           </div>
         </nav>
