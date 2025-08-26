@@ -93,6 +93,7 @@ export default function App() {
             transition: isSpinning
               ? "transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
               : "none",
+            zIndex: -1,
           }}
         >
           {/* Các phân đoạn */}
@@ -149,9 +150,7 @@ export default function App() {
                 y={radius}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                transform={`rotate(${
-                  (360 / segments.length) * i + 360 / (2 * segments.length) + 90
-                } ${radius} ${radius}) translate(0,-${radius * 0.65})`}
+                transform={`rotate(${(360 / segments.length) * i + 360 / (2 * segments.length) + 90} ${radius} ${radius}) translate(0,-${radius * 0.65})`}
                 className="text-sm sm:text-xl font-medium fill-[#2F7A01]"
               >
                 {seg.text}
