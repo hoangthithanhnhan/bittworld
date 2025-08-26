@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { EyeOff, Eye } from "lucide-react";
 import Image from "next/image";
+import { color } from "motion-dom";
 
 const style = {
   position: "absolute" as const,
@@ -32,7 +33,21 @@ export default function LoginModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Login</Button>
+      <Button onClick={handleOpen} 
+        sx={{
+        color: '#00BE7A',
+        textTransform: "none",
+        padding: '0',
+        margin: '0',
+        display: 'inline',
+        width: 'fit-content',
+        minWidth: "unset", 
+        textDecoration: "underline",  
+        marginLeft: '0.25rem',
+        fontFamily:'Inter'
+        }}>
+        Login
+      </Button>
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={style}

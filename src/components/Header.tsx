@@ -8,7 +8,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="w-full bg-[#0C0C0C] text-white flex items-center justify-between px-5 py-2.5 relative">
+    <header className="w-full bg-[#0C0C0C] text-white flex items-center justify-between px-5 py-2.5 fixed">
       {/* Logo */}
       <div className="flex items-center">
         <Image

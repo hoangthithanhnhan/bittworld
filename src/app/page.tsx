@@ -3,21 +3,16 @@ import LoginModal from 'components/login'
 import App from 'components/wheel'
 import React from 'react'
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-
-
-const rootElement = document.getElementById("root");
-const root = rootElement ? createRoot(rootElement) : null;
 
 export default function HomePage() {
   return (
-    <div>
-      <LoginModal />
-      root.render(
+    <div className='min-h-screen flex flex-col items-center justify-center'>
       <StrictMode>
         <App />
       </StrictMode>
-    );
+      <p className="mt-[1.375rem] text-sm text-[#0D1F3C] flex items-center">
+        Already have an account? <LoginModal />
+      </p>
     </div>
   )
 }

@@ -36,8 +36,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/components/text.txl",
-    "src/**/*", 
-    "types/**/*"
+    "src", 
+    "**/*.ts",
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules"
