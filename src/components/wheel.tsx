@@ -299,14 +299,6 @@ export default function App() {
         result={result}
         onClose={() => setIsModalOpen(false)}
       />
-
-      {/* {result && (
-        <div className="mt-6 p-4 bg-white rounded-lg shadow-md">
-          <p className="text-lg font-semibold text-gray-800">
-            Result: <span className="text-[#2F7A01]">{result}</span>
-          </p>
-        </div>
-      )} */}
     </div>
   );
 }
