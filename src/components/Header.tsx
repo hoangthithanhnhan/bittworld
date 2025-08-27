@@ -4,22 +4,34 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLang } from "lang/useLang";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, ChevronUp, ChevronDown } from "lucide-react";
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Button,
 } from "@heroui/react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState({
+    name: "English",
+    img: "/english.png",
+  });
   const { t } = useLang();
   const [theme, setTheme] = useState("light");
   const toggleTheme = (newTheme: any) => {
     setTheme(newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
+  };
+  const languages = [
+    { name: "Korean", img: "/korea.png" },
+    { name: "English", img: "/english.png" },
+  ];
+  const handleSelectLanguage = (lang: { name: string; img: string }) => {
+    setSelectedLanguage(lang);
+    setIsLangOpen(false);
   };
 
   return (
@@ -67,27 +79,47 @@ export default function Header() {
               />
             </button>
           </DropdownTrigger>
-          <DropdownMenu aria-label="Static Actions" className="bg-black border-2 border-[#E6E9EC] rounded-lg py-1 px-2 min-w-[200px]">
-            <DropdownItem key="lang" className="text-white flex items-center mb-2 text-xs font-semibold h-fit">
+          <DropdownMenu
+            aria-label="Static Actions"
+            className="bg-black rounded-lg py-2 px-2 min-w-[200px] shadow-[0_0_1px_0px_#E6E9EC]"
+          >
+            <DropdownItem
+              key="lang"
+              className="text-white mb-4 text-sm font-bold flex items-center"
+            >
               <Image
                 src="/korea.png"
                 alt="한국어"
                 width={25}
                 height={18}
-                className="inline-block mr-2 object-cover"
+                className="inline-block mr-2 object-cover -mb-1"
               />
-              한국어
+              <span className=" inline-block">한국어</span>
             </DropdownItem>
             <DropdownItem
               key="light-theme"
-              className="text-white flex items-center cursor-pointer justify-between"
+              className="text-white flex items-center cursor-pointer justify-around"
               onClick={() => toggleTheme("light")}
             >
-              <button className="border-none bg-transparent" onClick={() => toggleTheme('dark')}>
-                <Moon className={`mr-2 ${theme === 'dark' ? 'text-white' : 'text-[#E6E9EC]'}`} />
+              <button
+                className="border-none bg-transparent hover:cursor-pointer mr-7"
+                onClick={() => toggleTheme("dark")}
+              >
+                <Moon
+                  className={`mr-2 ${
+                    theme === "dark" ? "text-white" : "text-[#E6E9EC]"
+                  }`}
+                />
               </button>
-              <button className="border-none bg-transparent" onClick={() => toggleTheme('light')}>
-                <Sun className={`mr-2 ${theme === 'light' ? 'text-white' : 'text-[#E6E9EC]'}`} />
+              <button
+                className="border-none bg-transparent hover:cursor-pointer"
+                onClick={() => toggleTheme("light")}
+              >
+                <Sun
+                  className={`mr-2 ${
+                    theme === "light" ? "text-white" : "text-[#E6E9EC]"
+                  }`}
+                />
               </button>
             </DropdownItem>
           </DropdownMenu>
@@ -155,16 +187,55 @@ export default function Header() {
             BITTWORLD DEX
           </Link>
           <hr />
-          <div className="flex items-center py-[0.875rem] text-xs">
-            <Image
-              src="/english.png"
-              alt="English"
-              width={18}
-              height={18}
-              className="inline-block mr-2"
-            />
-            <span className="mr-2">English</span>
+          {/* language selector */}
+          <div
+            onClick={() => setIsLangOpen(!isLangOpen)}
+            className="flex items-center justify-between py-[0.875rem] text-xs relative"
+          >
+            <div className="flex items-center">
+              <Image
+                src={selectedLanguage.img}
+                alt={selectedLanguage.name}
+                width={18}
+                height={18}
+                className="inline-block mr-2 object-cover rounded-full"
+              />
+              <span className="mr-2">{selectedLanguage.name}</span>
+            </div>
+            <button className="border-none bg-transparent hover:cursor-pointer">
+              {isLangOpen ? (
+                <ChevronUp strokeWidth={1} width={18} height={18} />
+              ) : (
+                <ChevronDown strokeWidth={1} width={18} height={18} />
+              )}
+            </button>
           </div>
+
+          {/* Language Dropdown */}
+          {isLangOpen && (
+            <div className="absolute w-full bg-primary left-0 px-4 z-10">
+              {languages.map((lang, index) => (
+                <>
+                  <Link
+                    href="#"
+                    key={lang.name}
+                    onClick={() => handleSelectLanguage(lang)}
+                    className="flex items-center py-[0.875rem] text-xs text-white font-normal w-full"
+                  >
+                    <Image
+                      src={lang.img}
+                      alt={lang.name}
+                      width={18}
+                      height={18}
+                      className="inline-block mr-2 object-cover rounded-full"
+                    />
+                    <span className="mr-2 text-xs">{lang.name}</span>
+                  </Link>
+                  <hr className={`${index==0 ? 'block' : 'hidden'} shadow-none`} />
+                </>
+              ))}
+            </div>
+          )}
         </nav>
       )}
     </header>

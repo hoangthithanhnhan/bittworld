@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import { EyeOff, Eye } from "lucide-react";
 import Image from "next/image";
 import { color } from "motion-dom";
+import { login } from "services/AuthService";
 
 const style = {
   position: "absolute" as const,
@@ -24,6 +25,10 @@ export default function LoginModal() {
   const [activeTab, setActiveTab] = React.useState<"login" | "register">(
     "login"
   );
+
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
+
   const [checked, setChecked] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -31,21 +36,34 @@ export default function LoginModal() {
   const handleClose = () => setOpen(false);
   const togglePassword = () => setShowPassword(!showPassword);
 
+  const handleLogin = async () => {
+    try {
+      const data = await login(email, password);
+      console.log("Login success:", data);
+      handleClose();
+    } catch (error: any) {
+      console.error("Login failed:", error.response?.data || error.message);
+      alert("Login failed");
+    }
+  };
+
   return (
     <div>
-      <Button onClick={handleOpen} 
+      <Button
+        onClick={handleOpen}
         sx={{
-        color: '#00BE7A',
-        textTransform: "none",
-        padding: '0',
-        margin: '0',
-        display: 'inline',
-        width: 'fit-content',
-        minWidth: "unset", 
-        textDecoration: "underline",  
-        marginLeft: '0.25rem',
-        fontFamily:'Inter'
-        }}>
+          color: "#00BE7A",
+          textTransform: "none",
+          padding: "0",
+          margin: "0",
+          display: "inline",
+          width: "fit-content",
+          minWidth: "unset",
+          textDecoration: "underline",
+          marginLeft: "0.25rem",
+          fontFamily: "Inter",
+        }}
+      >
         Login
       </Button>
       <Modal open={open} onClose={handleClose}>
@@ -98,6 +116,8 @@ export default function LoginModal() {
                   type="email"
                   placeholder="Enter email"
                   className="bg-transparent border-none outline-none ml-2 w-full"
+                  value={email || ''}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <label className="font-bold text-xs sm:text-sm w-full mb-2">
@@ -114,6 +134,8 @@ export default function LoginModal() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   className="bg-transparent border-none outline-none ml-2 w-full"
+                  value={password || ''}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <div
                   onClick={togglePassword}
@@ -138,8 +160,8 @@ export default function LoginModal() {
                   )}
                 </div>
               </div>
-              <div className="flex justify-between items-center w-full mb-8">
-                <div className="flex items-center gap-2">
+              <div className="flex justify-end items-center w-full mb-8">
+                {/* <div className="flex items-center gap-2">
                   <input
                     className="w-3 h-3 sm:w-4 sm:h-4"
                     type="checkbox"
@@ -147,12 +169,15 @@ export default function LoginModal() {
                     onChange={(e) => setChecked(e.target.checked)}
                   />
                   <p className="text-xs sm:text-sm">Remember login</p>
-                </div>
+                </div> */}
                 <a href="#" className="text-black text-xs sm:text-sm">
                   Forgot password?
                 </a>
               </div>
-              <button className="font-medium text-sm sm:text-[1rem] mx-5 w-full sm:w-auto py-1 sm:py-3 sm:px-32 bg-primary rounded-md border-none text-white mb-6">
+              <button
+                onClick={handleLogin}
+                className="font-medium text-sm sm:text-[1rem] mx-5 w-full sm:w-auto py-1 sm:py-3 sm:px-32 bg-primary rounded-md border-none text-white mb-6 hover:cursor-pointer"
+              >
                 LOGIN
               </button>
             </>

@@ -2,21 +2,85 @@
 
 import { useState, useEffect } from "react";
 import LoginModal from "./login";
+import Image from "next/image";
+
+interface ResultModalProps {
+  isOpen: boolean;
+  result: string;
+  onClose: () => void;
+}
+
+function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 shadow-xl flex flex-col items-center w-11/12 md:w-[700px]">
+        <h2 className="text-xl sm:text-xl font-bold text-[#0D1F3C] mb-5 text-center">
+          CONGRATULATIONS!
+        </h2>
+        <Image
+          src={result === "No Prize" ? "/no-reward.png" : "/reward.png"}
+          alt="Reward Result"
+          width={200}
+          height={200}
+        />
+        <p
+          className={`text-sm font-medium text-center ${
+            result === "No Prize" ? "hidden" : "flex"
+          }`}
+        >
+          {result === "No Prize" ? "" : "USDT Reward"}
+        </p>
+        <p
+          className={`text-lg sm:text-3xl font-extrabold text-center text-primary ${
+            result !== "No Prize" ? "flex" : "hidden"
+          }`}
+        >
+          {result}
+        </p>
+        <p
+          className={`text-sm font-medium text-center ${
+            result === "No Prize" ? "flex" : "hidden"
+          }`}
+        >
+          Better luck next time
+        </p>
+        {result !== "No Prize" ? (
+          <button
+            onClick={onClose}
+            className="mt-6 w-full px-6 sm:w-[300px] py-3 bg-primary text-white font-medium sm:text-md rounded-md border-none transition-transform duration-200 active:scale-95"
+          >
+            RECEIVE
+          </button>
+        ) : (
+          <button
+            onClick={onClose}
+            className="mt-6 w-[300px] py-3 bg-[#F0F8F2] text-primary font-medium sm:text-md rounded-md border-1 border-primary transition-transform duration-200 active:scale-95"
+          >
+            GO BACK
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [result, setResult] = useState<string>("");
   const [radius, setRadius] = useState(210);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const updateRadius = () => {
       if (window.innerWidth < 360) {
-        setRadius(130); // điện thoại nhỏ 320px
+        setRadius(130);
       } else if (window.innerWidth < 640) {
-        setRadius(163.5); // sm
+        setRadius(163.5);
       } else {
-        setRadius(210); // desktop
+        setRadius(210);
       }
     };
 
@@ -24,6 +88,12 @@ export default function App() {
     window.addEventListener("resize", updateRadius);
     return () => window.removeEventListener("resize", updateRadius);
   }, []);
+
+  useEffect(() => {
+    if (result) {
+      setIsModalOpen(true);
+    }
+  }, [result]);
 
   const segments = [
     { text: "$5", color: "#ECE19A" },
@@ -35,7 +105,6 @@ export default function App() {
     { text: "No Prize", color: "#ECE19A" },
     { text: "$8", color: "#F6ECBD" },
   ];
-
 
   const spinWheel = () => {
     if (isSpinning) return;
@@ -52,7 +121,7 @@ export default function App() {
     setRotation(finalRotation);
 
     setTimeout(() => {
-      const normalizedRotation = finalRotation % 360;
+      const normalizedRotation = (finalRotation + 90) % 360;
       const winnerIndex =
         Math.floor((360 - normalizedRotation) / segmentAngle) % segments.length;
       const winner = segments[winnerIndex];
@@ -60,7 +129,6 @@ export default function App() {
       setIsSpinning(false);
     }, 4000); // thời gian trùng với animation
   };
-
 
   // Hàm tạo path cho từng segment
   const createSegmentPath = (index: number, total: number) => {
@@ -150,7 +218,9 @@ export default function App() {
                 y={radius}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                transform={`rotate(${(360 / segments.length) * i + 360 / (2 * segments.length) + 90} ${radius} ${radius}) translate(0,-${radius * 0.65})`}
+                transform={`rotate(${
+                  (360 / segments.length) * i + 360 / (2 * segments.length) + 90
+                } ${radius} ${radius}) translate(0,-${radius * 0.65})`}
                 className="text-sm sm:text-xl font-medium fill-[#2F7A01]"
               >
                 {seg.text}
@@ -223,6 +293,12 @@ export default function App() {
       >
         {isSpinning ? "Spinning..." : "SPIN"}
       </button>
+
+      <ResultModal
+        isOpen={isModalOpen}
+        result={result}
+        onClose={() => setIsModalOpen(false)}
+      />
 
       {/* {result && (
         <div className="mt-6 p-4 bg-white rounded-lg shadow-md">
